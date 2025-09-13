@@ -117,6 +117,46 @@ database:
   user: ""
   password: ""
 
+# Built-in PostgreSQL configuration
+postgresql:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "15-alpine"
+    pullPolicy: IfNotPresent
+  auth:
+    username: "nginxpm"
+    password: "nginxpm123"
+    database: "nginxpm"
+  persistence:
+    enabled: true
+    size: 8Gi
+    accessModes:
+      - ReadWriteOnce
+    # storageClass: ""
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  podSecurityContext:
+    fsGroup: 999
+  securityContext:
+    runAsUser: 999
+    runAsGroup: 999
+    runAsNonRoot: true
+  initdb:
+    enabled: true
+    scripts: ""
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  env: []
+  volumes: []
+  volumeMounts: []
+
 # Existing secret to use for database password
 existingSecret: ""
 

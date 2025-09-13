@@ -134,48 +134,84 @@ questions:
     label: "SSL Certificate Storage Class"
 
 # Database Configuration
+- variable: postgresql.enabled
+  default: true
+  description: "Enable built-in PostgreSQL database (recommended for HA)"
+  type: boolean
+  label: "Enable Built-in PostgreSQL"
+  group: "Database Configuration"
+  subquestions:
+  - variable: postgresql.auth.username
+    default: "nginxpm"
+    description: "PostgreSQL username"
+    type: string
+    label: "PostgreSQL Username"
+  - variable: postgresql.auth.password
+    default: "nginxpm123"
+    description: "PostgreSQL password"
+    type: password
+    label: "PostgreSQL Password"
+  - variable: postgresql.auth.database
+    default: "nginxpm"
+    description: "PostgreSQL database name"
+    type: string
+    label: "PostgreSQL Database"
+  - variable: postgresql.persistence.enabled
+    default: true
+    description: "Enable persistent storage for PostgreSQL"
+    type: boolean
+    label: "Enable PostgreSQL Persistence"
+  - variable: postgresql.persistence.size
+    default: "8Gi"
+    description: "Size of PostgreSQL persistent volume"
+    type: string
+    label: "PostgreSQL Volume Size"
+    show_if: "postgresql.persistence.enabled=true"
+  - variable: postgresql.persistence.storageClass
+    default: ""
+    description: "Storage class for PostgreSQL volume (leave empty for default)"
+    type: storageclass
+    label: "PostgreSQL Storage Class"
+    show_if: "postgresql.persistence.enabled=true"
+
 - variable: database.type
   default: ""
-  description: "External database type (leave empty for built-in SQLite)"
+  description: "External database type (only if built-in PostgreSQL is disabled)"
   type: enum
   options:
     - ""
     - "mysql"
     - "mariadb"
     - "postgres"
-  label: "Database Type"
+  label: "External Database Type"
   group: "Database Configuration"
+  show_if: "postgresql.enabled=false"
   subquestions:
   - variable: database.host
     default: ""
     description: "Database host"
     type: hostname
     label: "Database Host"
-    show_if: "database.type!=&&database.type!="
   - variable: database.port
     default: ""
     description: "Database port"
     type: string
     label: "Database Port"
-    show_if: "database.type!=&&database.type!="
   - variable: database.name
     default: ""
     description: "Database name"
     type: string
     label: "Database Name"
-    show_if: "database.type!=&&database.type!="
   - variable: database.user
     default: ""
     description: "Database username"
     type: string
     label: "Database Username"
-    show_if: "database.type!=&&database.type!="
   - variable: database.password
     default: ""
     description: "Database password"
     type: password
     label: "Database Password"
-    show_if: "database.type!=&&database.type!="
 
 # Resources Configuration
 - variable: resources.requests.cpu

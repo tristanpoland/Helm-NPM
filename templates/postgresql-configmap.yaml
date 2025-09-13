@@ -1,0 +1,20 @@
+{{- if and .Values.postgresql.enabled .Values.postgresql.initdb.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "nginx-proxy-manager.fullname" . }}-postgresql-initdb
+  labels:
+    {{- include "nginx-proxy-manager.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgresql
+data:
+  01-init.sql: |
+    -- Create database and user for Nginx Proxy Manager
+    CREATE DATABASE {{ .Values.postgresql.auth.database }};
+    CREATE USER {{ .Values.postgresql.auth.username }} WITH ENCRYPTED PASSWORD '{{ .Values.postgresql.auth.password }}';
+    GRANT ALL PRIVILEGES ON DATABASE {{ .Values.postgresql.auth.database }} TO {{ .Values.postgresql.auth.username }};
+
+    -- Additional initialization if needed
+    {{- if .Values.postgresql.initdb.scripts }}
+    {{- .Values.postgresql.initdb.scripts | nindent 4 }}
+    {{- end }}
+{{- end }}

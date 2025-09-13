@@ -2,7 +2,7 @@ apiVersion: v2
 name: nginx-proxy-manager
 description: A Helm chart for Nginx Proxy Manager - a Docker container for managing Nginx proxy hosts with SSL termination
 type: application
-version: 2.0.0
+version: 3.0.0
 appVersion: "2.11.3"
 home: https://nginxproxymanager.com/
 sources:

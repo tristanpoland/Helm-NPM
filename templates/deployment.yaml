@@ -44,10 +44,27 @@ spec:
               containerPort: 81
               protocol: TCP
           env:
-            {{- if .Values.database.type }}
+            {{- if .Values.postgresql.enabled }}
+            # Built-in PostgreSQL configuration
+            - name: DB_TYPE
+              value: "postgres"
+            - name: DB_HOST
+              value: "{{ include "nginx-proxy-manager.fullname" . }}-postgresql"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: {{ .Values.postgresql.auth.database | quote }}
+            - name: DB_USER
+              value: {{ .Values.postgresql.auth.username | quote }}
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "nginx-proxy-manager.fullname" . }}-postgresql
+                  key: postgres-password
+            {{- else if .Values.database.type }}
+            # External database configuration
             - name: DB_TYPE
               value: {{ .Values.database.type | quote }}
-            {{- end }}
             {{- if .Values.database.host }}
             - name: DB_HOST
               value: {{ .Values.database.host | quote }}
@@ -70,6 +87,7 @@ spec:
                 secretKeyRef:
                   name: {{ include "nginx-proxy-manager.secretName" . }}
                   key: database-password
+            {{- end }}
             {{- end }}
             {{- with .Values.env }}
             {{- toYaml . | nindent 12 }}
