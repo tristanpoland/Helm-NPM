@@ -16,3 +16,8 @@ keywords:
 maintainers:
   - name: nginx-proxy-manager
     url: https://nginxproxymanager.com/
+annotations:
+  catalog.cattle.io/display-name: "Nginx Proxy Manager"
+  catalog.cattle.io/rancher-version: ">= 2.6.0-0"
+  catalog.cattle.io/kube-version: ">= 1.20.0-0"
+  catalog.cattle.io/os: linux
