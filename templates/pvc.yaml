@@ -1,0 +1,47 @@
+{{- if .Values.persistence.data.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "nginx-proxy-manager.fullname" . }}-data
+  labels:
+    {{- include "nginx-proxy-manager.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    {{- range .Values.persistence.data.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.data.size | quote }}
+  {{- if .Values.persistence.data.storageClass }}
+  {{- if (eq "-" .Values.persistence.data.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: "{{ .Values.persistence.data.storageClass }}"
+  {{- end }}
+  {{- end }}
+{{- end }}
+---
+{{- if .Values.persistence.letsencrypt.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "nginx-proxy-manager.fullname" . }}-letsencrypt
+  labels:
+    {{- include "nginx-proxy-manager.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    {{- range .Values.persistence.letsencrypt.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.letsencrypt.size | quote }}
+  {{- if .Values.persistence.letsencrypt.storageClass }}
+  {{- if (eq "-" .Values.persistence.letsencrypt.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: "{{ .Values.persistence.letsencrypt.storageClass }}"
+  {{- end }}
+  {{- end }}
+{{- end }}
