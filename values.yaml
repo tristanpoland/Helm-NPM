@@ -133,3 +133,19 @@ volumes: []
 
 # Additional volume mounts
 volumeMounts: []
+
+# Rancher-specific configuration
+rancher:
+  # Rancher project namespace
+  projectId: ""
+  # Enable Rancher monitoring integration
+  monitoring:
+    enabled: false
+  # Rancher cattle annotations
+  cattle:
+    # Source repository type for Rancher UI
+    sourceRepoType: "cluster"
+    # Source repository name
+    sourceRepo: "rancher-charts"
+  # Global registry override for Rancher environments
+  systemDefaultRegistry: ""
