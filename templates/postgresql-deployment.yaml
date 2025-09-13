@@ -87,8 +87,10 @@ spec:
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 6
+          {{- if .Values.postgresql.resources }}
           resources:
             {{- toYaml .Values.postgresql.resources | nindent 12 }}
+          {{- end }}
       volumes:
         - name: postgresql-data
           {{- if .Values.postgresql.persistence.enabled }}
