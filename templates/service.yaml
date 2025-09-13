@@ -11,23 +11,14 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
-      {{- if and (eq .Values.service.type "NodePort") .Values.service.nodePort }}
-      nodePort: {{ .Values.service.nodePort }}
-      {{- end }}
     - port: {{ .Values.service.httpsPort }}
       targetPort: https
       protocol: TCP
       name: https
-      {{- if and (eq .Values.service.type "NodePort") .Values.service.httpsNodePort }}
-      nodePort: {{ .Values.service.httpsNodePort }}
-      {{- end }}
     - port: {{ .Values.service.adminPort }}
       targetPort: admin
       protocol: TCP
       name: admin
-      {{- if and (eq .Values.service.type "NodePort") .Values.service.adminNodePort }}
-      nodePort: {{ .Values.service.adminNodePort }}
-      {{- end }}
   selector:
     {{- include "nginx-proxy-manager.selectorLabels" . | nindent 4 }}
 ---
@@ -45,9 +36,6 @@ spec:
       targetPort: admin
       protocol: TCP
       name: admin
-      {{- if and (eq .Values.service.admin.type "NodePort") .Values.service.admin.nodePort }}
-      nodePort: {{ .Values.service.admin.nodePort }}
-      {{- end }}
   selector:
     {{- include "nginx-proxy-manager.selectorLabels" . | nindent 4 }}
 {{- end }}

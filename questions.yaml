@@ -25,45 +25,43 @@ questions:
 
 # Service Configuration
 - variable: service.type
-  default: "NodePort"
-  description: "Service type for exposing the application"
+  default: "ClusterIP"
+  description: "Service type for internal cluster communication"
   type: enum
   options:
     - "ClusterIP"
-    - "NodePort"
     - "LoadBalancer"
   label: "Service Type"
   group: "Service Configuration"
 
-- variable: service.nodePort
-  default: 80
-  description: "NodePort for HTTP access"
-  type: int
-  min: 1
-  max: 65535
-  label: "HTTP NodePort"
+- variable: service.hostPort.enabled
+  default: true
+  description: "Enable hostPort for direct access on nodes (allows ports 80, 81, 443)"
+  type: boolean
+  label: "Enable Host Port Binding"
   group: "Service Configuration"
-  show_if: "service.type=NodePort"
-
-- variable: service.httpsNodePort
-  default: 443
-  description: "NodePort for HTTPS access"
-  type: int
-  min: 1
-  max: 65535
-  label: "HTTPS NodePort"
-  group: "Service Configuration"
-  show_if: "service.type=NodePort"
-
-- variable: service.adminNodePort
-  default: 81
-  description: "NodePort for admin interface access"
-  type: int
-  min: 1
-  max: 65535
-  label: "Admin NodePort"
-  group: "Service Configuration"
-  show_if: "service.type=NodePort"
+  subquestions:
+  - variable: service.hostPort.http
+    default: 80
+    description: "Host port for HTTP access"
+    type: int
+    min: 1
+    max: 65535
+    label: "HTTP Host Port"
+  - variable: service.hostPort.https
+    default: 443
+    description: "Host port for HTTPS access"
+    type: int
+    min: 1
+    max: 65535
+    label: "HTTPS Host Port"
+  - variable: service.hostPort.admin
+    default: 81
+    description: "Host port for admin interface access"
+    type: int
+    min: 1
+    max: 65535
+    label: "Admin Host Port"
 
 - variable: service.admin.enabled
   default: true

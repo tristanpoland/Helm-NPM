@@ -37,19 +37,20 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: NodePort
+  type: ClusterIP
   port: 80
   httpsPort: 443
   adminPort: 81
-  # NodePort configuration (only used when type is NodePort)
-  nodePort: 80    # HTTP access on any node IP
-  httpsNodePort: 443  # HTTPS access on any node IP
-  adminNodePort: 81   # Admin access on any node IP
+  # HostPort configuration - binds directly to host ports (allows ports 80, 81, 443)
+  hostPort:
+    enabled: true
+    http: 80      # HTTP access on any node IP
+    https: 443    # HTTPS access on any node IP
+    admin: 81     # Admin access on any node IP
   admin:
     enabled: true
-    type: NodePort
+    type: ClusterIP
     port: 81
-    nodePort: 81    # Admin access on any node IP
 
 ingress:
   enabled: false

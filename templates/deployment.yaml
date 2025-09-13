@@ -37,12 +37,21 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
+              {{- if .Values.service.hostPort.enabled }}
+              hostPort: {{ .Values.service.hostPort.http }}
+              {{- end }}
             - name: https
               containerPort: 443
               protocol: TCP
+              {{- if .Values.service.hostPort.enabled }}
+              hostPort: {{ .Values.service.hostPort.https }}
+              {{- end }}
             - name: admin
               containerPort: 81
               protocol: TCP
+              {{- if .Values.service.hostPort.enabled }}
+              hostPort: {{ .Values.service.hostPort.admin }}
+              {{- end }}
           env:
             {{- if .Values.postgresql.enabled }}
             # Built-in PostgreSQL configuration
