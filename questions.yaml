@@ -1,0 +1,207 @@
+categories:
+- Web Server
+- Reverse Proxy
+- SSL/TLS
+
+rancher_min_version: 2.6.0
+
+questions:
+# Basic Configuration
+- variable: replicaCount
+  default: 1
+  description: "Number of replicas to deploy"
+  type: int
+  min: 1
+  max: 10
+  label: "Replica Count"
+  group: "Basic Configuration"
+
+- variable: image.tag
+  default: ""
+  description: "Docker image tag (leave empty for chart appVersion)"
+  type: string
+  label: "Image Tag"
+  group: "Basic Configuration"
+
+# Service Configuration
+- variable: service.type
+  default: "NodePort"
+  description: "Service type for exposing the application"
+  type: enum
+  options:
+    - "ClusterIP"
+    - "NodePort"
+    - "LoadBalancer"
+  label: "Service Type"
+  group: "Service Configuration"
+
+- variable: service.nodePort
+  default: 80
+  description: "NodePort for HTTP access"
+  type: int
+  min: 1
+  max: 65535
+  label: "HTTP NodePort"
+  group: "Service Configuration"
+  show_if: "service.type=NodePort"
+
+- variable: service.httpsNodePort
+  default: 443
+  description: "NodePort for HTTPS access"
+  type: int
+  min: 1
+  max: 65535
+  label: "HTTPS NodePort"
+  group: "Service Configuration"
+  show_if: "service.type=NodePort"
+
+- variable: service.adminNodePort
+  default: 81
+  description: "NodePort for admin interface access"
+  type: int
+  min: 1
+  max: 65535
+  label: "Admin NodePort"
+  group: "Service Configuration"
+  show_if: "service.type=NodePort"
+
+- variable: service.admin.enabled
+  default: true
+  description: "Enable separate admin service"
+  type: boolean
+  label: "Enable Admin Service"
+  group: "Service Configuration"
+
+# Ingress Configuration
+- variable: ingress.enabled
+  default: false
+  description: "Enable ingress for external access"
+  type: boolean
+  label: "Enable Ingress"
+  group: "Ingress Configuration"
+
+- variable: ingress.className
+  default: ""
+  description: "Ingress class name"
+  type: string
+  label: "Ingress Class"
+  group: "Ingress Configuration"
+  show_if: "ingress.enabled=true"
+
+- variable: ingress.hosts[0].host
+  default: "nginx-proxy-manager.local"
+  description: "Primary hostname for ingress"
+  type: hostname
+  label: "Ingress Hostname"
+  group: "Ingress Configuration"
+  show_if: "ingress.enabled=true"
+
+# Storage Configuration
+- variable: persistence.data.enabled
+  default: true
+  description: "Enable persistent storage for application data"
+  type: boolean
+  label: "Enable Data Persistence"
+  group: "Storage Configuration"
+  subquestions:
+  - variable: persistence.data.size
+    default: "10Gi"
+    description: "Size of persistent volume for data"
+    type: string
+    label: "Data Volume Size"
+  - variable: persistence.data.storageClass
+    default: ""
+    description: "Storage class for data volume (leave empty for default)"
+    type: storageclass
+    label: "Data Storage Class"
+
+- variable: persistence.letsencrypt.enabled
+  default: true
+  description: "Enable persistent storage for Let's Encrypt certificates"
+  type: boolean
+  label: "Enable SSL Certificate Persistence"
+  group: "Storage Configuration"
+  subquestions:
+  - variable: persistence.letsencrypt.size
+    default: "1Gi"
+    description: "Size of persistent volume for SSL certificates"
+    type: string
+    label: "SSL Certificate Volume Size"
+  - variable: persistence.letsencrypt.storageClass
+    default: ""
+    description: "Storage class for SSL certificate volume (leave empty for default)"
+    type: storageclass
+    label: "SSL Certificate Storage Class"
+
+# Database Configuration
+- variable: database.type
+  default: ""
+  description: "External database type (leave empty for built-in SQLite)"
+  type: enum
+  options:
+    - ""
+    - "mysql"
+    - "mariadb"
+    - "postgres"
+  label: "Database Type"
+  group: "Database Configuration"
+  subquestions:
+  - variable: database.host
+    default: ""
+    description: "Database host"
+    type: hostname
+    label: "Database Host"
+    show_if: "database.type!=&&database.type!="
+  - variable: database.port
+    default: ""
+    description: "Database port"
+    type: string
+    label: "Database Port"
+    show_if: "database.type!=&&database.type!="
+  - variable: database.name
+    default: ""
+    description: "Database name"
+    type: string
+    label: "Database Name"
+    show_if: "database.type!=&&database.type!="
+  - variable: database.user
+    default: ""
+    description: "Database username"
+    type: string
+    label: "Database Username"
+    show_if: "database.type!=&&database.type!="
+  - variable: database.password
+    default: ""
+    description: "Database password"
+    type: password
+    label: "Database Password"
+    show_if: "database.type!=&&database.type!="
+
+# Resources Configuration
+- variable: resources.requests.cpu
+  default: ""
+  description: "CPU resource requests"
+  type: string
+  label: "CPU Requests"
+  group: "Resources"
+
+- variable: resources.requests.memory
+  default: ""
+  description: "Memory resource requests"
+  type: string
+  label: "Memory Requests"
+  group: "Resources"
+
+- variable: resources.limits.cpu
+  default: ""
+  description: "CPU resource limits"
+  type: string
+  label: "CPU Limits"
+  group: "Resources"
+
+- variable: resources.limits.memory
+  default: ""
+  description: "Memory resource limits"
+  type: string
+  label: "Memory Limits"
+  group: "Resources"
